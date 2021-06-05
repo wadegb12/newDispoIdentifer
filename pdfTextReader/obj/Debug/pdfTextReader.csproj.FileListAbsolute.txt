@@ -1,0 +1,13 @@
+C:\Users\wadeb\Documents\Development\pdfTextReader\pdfTextReader\pdfTextReader\bin\Debug\pdfTextReader.exe.config
+C:\Users\wadeb\Documents\Development\pdfTextReader\pdfTextReader\pdfTextReader\bin\Debug\pdfTextReader.exe
+C:\Users\wadeb\Documents\Development\pdfTextReader\pdfTextReader\pdfTextReader\bin\Debug\pdfTextReader.pdb
+C:\Users\wadeb\Documents\Development\pdfTextReader\pdfTextReader\pdfTextReader\bin\Debug\BouncyCastle.Crypto.dll
+C:\Users\wadeb\Documents\Development\pdfTextReader\pdfTextReader\pdfTextReader\bin\Debug\itextsharp.dll
+C:\Users\wadeb\Documents\Development\pdfTextReader\pdfTextReader\pdfTextReader\bin\Debug\itextsharp.xml
+C:\Users\wadeb\Documents\Development\pdfTextReader\pdfTextReader\pdfTextReader\obj\Debug\pdfTextReader.csproj.AssemblyReference.cache
+C:\Users\wadeb\Documents\Development\pdfTextReader\pdfTextReader\pdfTextReader\obj\Debug\pdfTextReader.csproj.CoreCompileInputs.cache
+C:\Users\wadeb\Documents\Development\pdfTextReader\pdfTextReader\pdfTextReader\obj\Debug\pdfTextReader.csproj.CopyComplete
+C:\Users\wadeb\Documents\Development\pdfTextReader\pdfTextReader\pdfTextReader\obj\Debug\pdfTextReader.exe
+C:\Users\wadeb\Documents\Development\pdfTextReader\pdfTextReader\pdfTextReader\obj\Debug\pdfTextReader.pdb
+C:\Users\wadeb\Documents\Development\pdfTextReader\pdfTextReader\pdfTextReader\bin\Debug\Newtonsoft.Json.dll
+C:\Users\wadeb\Documents\Development\pdfTextReader\pdfTextReader\pdfTextReader\bin\Debug\Newtonsoft.Json.xml
