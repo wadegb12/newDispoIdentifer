@@ -5,14 +5,23 @@ using iTextSharp.text.pdf.parser;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json;
+using pdfTextReader.Common;
 
 namespace pdfTextReader
 {
     class Program
     {
+        static WebDriver webDriver = new WebDriver(@"C:\Users\kylen\source\repos\wadegb12\newDispoIdentifier\ChomeDriver", @"C:\Users\kylen\OneDrive\Desktop\DispoFiles\2021-06-06");
+
         static void Main(string[] args)
         {
-            var directory = @"C:\Users\wadeb\Documents\Development\NewDispoIdentifier\";
+
+            Tools.DispensaryDownloader.DownloadNewDispensaries(webDriver);
+            Globals.PrefixDateToLatestFile(webDriver);
+
+            Globals.LogIt("Setting Local Variables");
+
+            var directory = @"C:\Users\kylen\OneDrive\Desktop\DispoFiles\";
 
             var yesterday = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
             var directoryYesterday = directory + yesterday + @"\";
@@ -23,7 +32,7 @@ namespace pdfTextReader
             var dispoListFile = directoryToday + dateToday + " omma_dispensaries_list.pdf";
             var todaysDisposFile = directoryToday + dateToday + " Licensed Dispos.txt";
             var newDisposFile = directoryToday + dateToday + " New Dispos.txt";
-            var errorLotFile = directoryToday + "error_log.txt";
+            var errorLotFile = @"C:\Users\kylen\OneDrive\Desktop\DispoFiles\Log\error_log.txt";
 
             try
             {
@@ -39,12 +48,14 @@ namespace pdfTextReader
             }
             catch(Exception e)
             {
-                WriteOutputToFile(e.ToString(), errorLotFile);
+                string errorMessage = "[" + DateTime.Now.ToString("yyyy-MM-dd") + "] --- " + e.Message.ToString();
+                WriteOutputToFile(errorMessage, errorLotFile);
             }
         }
 
         static List<Dispensary> FindCompanies(PdfReader pdfReader)
         {
+            Globals.LogIt("Reading all dispensaries from PDF.");
             var allCompanies = new List<Dispensary>();
 
             for(int i = 1; i<= pdfReader.NumberOfPages; i++)
@@ -154,6 +165,7 @@ namespace pdfTextReader
 
         static void OutputTodaysCompanies(List<Dispensary> companies, string outputFileName)
         {
+            Globals.LogIt("Creating JSON list of all dispensaries from today.");
             using (StreamWriter outputFile = new StreamWriter(outputFileName))
             {
                outputFile.WriteLine(new JavaScriptSerializer().Serialize(companies));
@@ -162,6 +174,7 @@ namespace pdfTextReader
 
         static void OutputNewDispos(List<Dispensary> newDispos, string outputFileName)
         {
+            Globals.LogIt("Saving new dispensaries to text file.");
             using (StreamWriter outputFile = new StreamWriter(outputFileName))
             {
                 foreach (var dispo in newDispos)
@@ -182,7 +195,7 @@ namespace pdfTextReader
         static List<Dispensary> ReadInYesterdaysDispos(string fileName)
         {
             List<Dispensary> dispos = new List<Dispensary>();
-
+            Globals.LogIt("Reading yesterdays dispensaries from history.");
             using (StreamReader r = new StreamReader(fileName))
             {
                 string json = r.ReadToEnd();
@@ -196,7 +209,8 @@ namespace pdfTextReader
         {
             var dispoNameHashSet = new HashSet<string>();
 
-            foreach(var dispo in dispensaries)
+            Globals.LogIt("Creating hashset for list of previous run dispensaries.");
+            foreach (var dispo in dispensaries)
             {
                 dispoNameHashSet.Add(dispo.LicenseNum);
             }
@@ -208,7 +222,9 @@ namespace pdfTextReader
         {
             var newDispos = new List<Dispensary>();
 
-            foreach(var dispo in todaysDispos)
+            Globals.LogIt("Identifying todays new dispensaries.");
+
+            foreach (var dispo in todaysDispos)
             {
                 if (!yesterdaysDispos.Contains(dispo.LicenseNum))
                 {
