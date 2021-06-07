@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Web.Script.Serialization;
 using Newtonsoft.Json;
 using pdfTextReader.Common;
 using pdfTextReader.Services;
@@ -39,61 +38,31 @@ namespace pdfTextReader
             var dispoListFile = directoryToday + dateToday + " omma_dispensaries_list.pdf";
             var todaysDisposFile = directoryToday + dateToday + " Licensed Dispos.txt";
             var newDisposFile = directoryToday + dateToday + " New Dispos.txt";
-            var errorLotFile = directory + @"\Log\error_log.txt";
+            
 
             try
             {
+                var outputService = new OutputService();
                 var dispoListReader = new DispensaryListReader(dispoListFile);
+
                 var todaysDispos = dispoListReader.FindCompanies();
-                OutputTodaysCompanies(todaysDispos, todaysDisposFile);
+                outputService.OutputTodaysCompanies(todaysDispos, todaysDisposFile);
 
                 var yesterdaysDispos = ReadInYesterdaysDispos(yesterdaysDisposFile);
                 var yesterdaysDisposHashset = CreateNameHashSetFromDispensaryList(yesterdaysDispos);
 
                 var newDispos = IdentifyNewDispos(todaysDispos, yesterdaysDisposHashset);
-                OutputNewDispos(newDispos, newDisposFile);
+                outputService.OutputNewDispos(newDispos, newDisposFile);
             }
             catch(Exception e)
             {
-                string errorMessage = "[" + DateTime.Now.ToString("yyyy-MM-dd") + "] --- " + e.Message.ToString();
-                WriteOutputToFile(errorMessage, errorLotFile);
+                //outputService.WriteOutputToFile(errorMessage);
+                //call new logger
             }
         }
 
-        
 
-        
-
-        static void OutputTodaysCompanies(List<Dispensary> companies, string outputFileName)
-        {
-            Globals.LogIt("Creating JSON list of all dispensaries from today.");
-            using (StreamWriter outputFile = new StreamWriter(outputFileName))
-            {
-               outputFile.WriteLine(new JavaScriptSerializer().Serialize(companies));
-            }
-        }
-
-        static void OutputNewDispos(List<Dispensary> newDispos, string outputFileName)
-        {
-            Globals.LogIt("Saving new dispensaries to text file.");
-            using (StreamWriter outputFile = new StreamWriter(outputFileName))
-            {
-                foreach (var dispo in newDispos)
-                {
-                    outputFile.WriteLine(dispo.ToString());
-                }
-            }
-        }
-
-        static void WriteOutputToFile(string error, string outputFileName)
-        {
-            using (StreamWriter outputFile = new StreamWriter(outputFileName))
-            {
-                outputFile.WriteLine(error);
-            }
-        }
-
-        static List<Dispensary> ReadInYesterdaysDispos(string fileName)
+        private static List<Dispensary> ReadInYesterdaysDispos(string fileName)
         {
             List<Dispensary> dispos = new List<Dispensary>();
             Globals.LogIt("Reading yesterdays dispensaries from history.");
@@ -106,7 +75,7 @@ namespace pdfTextReader
             return dispos;
         }
 
-        static HashSet<string> CreateNameHashSetFromDispensaryList(List<Dispensary> dispensaries)
+        private static HashSet<string> CreateNameHashSetFromDispensaryList(List<Dispensary> dispensaries)
         {
             var dispoNameHashSet = new HashSet<string>();
 
@@ -119,7 +88,7 @@ namespace pdfTextReader
             return dispoNameHashSet;
         }
 
-        static List<Dispensary> IdentifyNewDispos(List<Dispensary> todaysDispos, HashSet<string> yesterdaysDispos)
+        private static List<Dispensary> IdentifyNewDispos(List<Dispensary> todaysDispos, HashSet<string> yesterdaysDispos)
         {
             var newDispos = new List<Dispensary>();
 
