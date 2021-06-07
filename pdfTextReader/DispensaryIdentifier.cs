@@ -12,7 +12,6 @@ namespace pdfTextReader
         public bool IsWadesLocal = true;
         public string RootDirectory;
         public string YesterdaysDisposFile;
-        public string TodaysDispoListFile;
         public string TodaysOMMAListFile;
         public string TodaysDisposFile;
         public string TodaysNewDisposFile;
