@@ -8,7 +8,7 @@ using System.Threading;
 
 
 
-namespace pdfTextReader.Tools
+namespace pdfTextReader.Services
 {
     class DispensaryDownloader
     {
