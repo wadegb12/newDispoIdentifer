@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 
@@ -12,40 +13,14 @@ namespace pdfTextReader.Services
 {
     class DispensaryDownloader
     {
-        static WebDriver wd;
-
-
-        public static void DownloadNewDispensaries(WebDriver driver)
+        // KNB : 6/12/21 : Simplified to get away from chrome driver and not have to worry about having latest selenium driver
+        public static void DownloadNewDispensaries()
         {
-            wd = driver;
-
-            if (NavigateToPage())
-            {
-
-                return;
-            }
-            else
-            {
-                throw new Exception("Failed to download dispensary file.");
-            }
+            WebClient tempWebClient = new WebClient();
+            tempWebClient.Headers.Add("User-Agent: Other");
+            tempWebClient.DownloadFile(Globals.GetDispensaryURL(), Globals.GetDailyFolder() + Globals.GetDailyDownloadFile());
+            Thread.Sleep(5000);
         }
 
-        static bool NavigateToPage()
-        {
-            Globals.LogIt("Checking if driver is launched");
-            if (wd.CheckCrashedDriver())
-            {
-                Globals.LogIt("Chrome version is updated past driver version");
-            }
-            else
-            {
-                Globals.LogIt("Navigating to Oklahoma.gov dispensaries list");
-                string message = wd.ToDispensaryPage("https://oklahoma.gov/content/dam/ok/en/omma/docs/business-lists/omma_dispensaries_list.pdf");
-                Thread.Sleep(5000);
-                return true;
-            }
-
-            return false;
-        }
     }
 }

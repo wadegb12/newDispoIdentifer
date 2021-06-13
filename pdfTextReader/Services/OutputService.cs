@@ -35,5 +35,18 @@ namespace pdfTextReader.Services
                 }
             }
         }
+        // KNB : 6/13/2021 : Add outputting the removed dispensaries
+        public void OutputRemovedDispos(List<Dispensary> removedDispos, string outputFileName)
+        {
+            Logger.WriteLog("Saving new dispensaries to text file.");
+
+            using (StreamWriter outputFile = new StreamWriter(outputFileName))
+            {
+                foreach (var dispo in removedDispos)
+                {
+                    outputFile.WriteLine(dispo.ToString());
+                }
+            }
+        }
     }
 }
