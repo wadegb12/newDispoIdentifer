@@ -15,7 +15,6 @@ namespace pdfTextReader
         public string TodaysDisposFile;
         public string TodaysNewDisposFile;
         public Logger Logger;
-        public WebDriver WebDriver;
 
         public DispensaryIdentifier()
         {
@@ -30,8 +29,6 @@ namespace pdfTextReader
             Logger = new Logger(Globals.GetLogFile());
             Logger.WriteLog("Setting Local Variables");
 
-            WebDriver = new WebDriver(@"C:\Users\kylen\source\repos\wadegb12\newDispoIdentifier\ChomeDriver");
-
             YesterdaysDisposFile = Globals.GetYesterdayFolder() + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + " Licensed Dispos.txt";
 
             TodaysOMMAListFile = Globals.GetDailyFolder() + Globals.GetDailyDownloadFile();
@@ -43,8 +40,7 @@ namespace pdfTextReader
         {
             try
             {
-                DispensaryDownloader.DownloadNewDispensaries(WebDriver);
-                Globals.PrefixDateToLatestFile(WebDriver);
+                DispensaryDownloader.DownloadNewDispensaries();
 
                 var outputService = new OutputService(Logger);
                 var dispoListReader = new DispensaryListReader(TodaysOMMAListFile, Logger);
