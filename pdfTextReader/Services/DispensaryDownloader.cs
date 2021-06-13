@@ -21,7 +21,6 @@ namespace pdfTextReader.Services
 
             if (NavigateToPage())
             {
-
                 return;
             }
             else
@@ -40,7 +39,7 @@ namespace pdfTextReader.Services
             else
             {
                 Globals.LogIt("Navigating to Oklahoma.gov dispensaries list");
-                string message = wd.ToDispensaryPage("https://oklahoma.gov/content/dam/ok/en/omma/docs/business-lists/omma_dispensaries_list.pdf");
+                wd.ToDispensaryPage(Globals.GetDispensaryURL());
                 Thread.Sleep(5000);
                 return true;
             }

@@ -20,16 +20,15 @@ namespace pdfTextReader.Common
         private ChromeOptions chromeOptions = new ChromeOptions();
         private IWebDriver driver;
         private int explicitSecondsToWait = 9;
-        private WebDriverWait defaultWaitTime;
 
-        public WebDriver(string driverLocation, string downloadFolder)
+        public WebDriver(string driverLocation)
         {
             try
             {
 
                 Proxy proxy = new Proxy { Kind = ProxyKind.System };
 
-                chromeOptions.AddUserProfilePreference("download.default_directory", downloadFolder);
+                chromeOptions.AddUserProfilePreference("download.default_directory", Globals.GetDailyFolder());
                 chromeOptions.AddUserProfilePreference("disable-popup-blocking", "false");
                 chromeOptions.AddUserProfilePreference("prompt_for_download", "false");
                 chromeOptions.AddUserProfilePreference("profile.default_content_setting_values.automatic_downloads", 1);
@@ -58,9 +57,6 @@ namespace pdfTextReader.Common
                 driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(240); // set web page load timeout of 2 minutes
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(explicitSecondsToWait); // wait up to XX seconds to find element
 
-                // init the default explicit wait object for class. This will wait for 20 seconds.
-                defaultWaitTime = new WebDriverWait(driver, TimeSpan.FromSeconds(explicitSecondsToWait));
-
             }
             catch
             {
@@ -68,15 +64,12 @@ namespace pdfTextReader.Common
             }
 
         }
-        public string ToDispensaryPage(string URL)
+        public void ToDispensaryPage(string URL)
         {
             driver.Url = URL;
             driver.Navigate();
             WaitForJStoLoad(driver);
 
-
-
-            return "Success";
         }
         private bool WaitForJStoLoad(IWebDriver driver, int maxWaitSeconds = 10)
         {
@@ -98,26 +91,21 @@ namespace pdfTextReader.Common
                 //To check page ready state.
                 if (js.ExecuteScript("return document.readyState").ToString().Equals("complete"))
                 {
-                    Common.Globals.LogIt("");
-                    Common.Globals.LogIt("Page : [" + driver.Title + "] Loaded In " + i.ToString() + " seconds.");
+                    Globals.LogIt("");
+                    Globals.LogIt("Page : [" + driver.Title + "] Loaded In " + i.ToString() + " seconds.");
                     break;
                 }
             }
 
             if (i >= maxWaitSeconds)
             {
-                Common.Globals.LogIt("ERROR: Page Failed to Load [" + driver.Url.ToLower() + "] within " + maxWaitSeconds.ToString() + " seconds.");
+                Globals.LogIt("ERROR: Page Failed to Load [" + driver.Url.ToLower() + "] within " + maxWaitSeconds.ToString() + " seconds.");
                 return false;
             }
 
             return true;
         }
 
-        public string GetDefaultDownloadDirectory()
-        {
-            string directory = @"C:\Users\kylen\OneDrive\Desktop\DispoFiles\" + DateTime.Now.ToString("yyyy-MM-dd"); 
-            return directory;
-        }
 
         public bool CheckCrashedDriver()
         {

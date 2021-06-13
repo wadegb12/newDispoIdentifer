@@ -14,11 +14,6 @@ namespace pdfTextReader.Services
 
         public void WriteLog(string log)
         {
-            if (!File.Exists(LogFile))
-            {
-                //create log file
-            }
-
             using (StreamWriter sw = File.AppendText(LogFile))
             {
                 sw.WriteLine("[" + DateTime.Now.ToString() + "] --- " + log);

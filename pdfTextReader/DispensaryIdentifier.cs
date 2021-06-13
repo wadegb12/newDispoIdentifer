@@ -9,7 +9,6 @@ namespace pdfTextReader
 {
     class DispensaryIdentifier
     {
-        public bool IsWadesLocal = true;
         public string RootDirectory;
         public string YesterdaysDisposFile;
         public string TodaysOMMAListFile;
@@ -20,43 +19,32 @@ namespace pdfTextReader
 
         public DispensaryIdentifier()
         {
+            Globals.SyncApplication();
             ReadConfigVariables();
         }
 
         private void ReadConfigVariables()
         {
-            RootDirectory = @"C:\Users\kylen\OneDrive\Desktop\DispoFiles\";
-            if (IsWadesLocal)
-            {
-                RootDirectory = @"C:\Users\wadeb\Documents\Development\DispensaryIdentifier\newDispoOutput\";
-            }
+            RootDirectory = Globals.GetBaseDirectory();         
 
-            Logger = new Logger(RootDirectory + @"Log\error_log.txt");
+            Logger = new Logger(Globals.GetLogFile());
             Logger.WriteLog("Setting Local Variables");
 
-            //WebDriver = new WebDriver(@"C:\Users\kylen\source\repos\wadegb12\newDispoIdentifier\ChomeDriver", @"C:\Users\kylen\OneDrive\Desktop\DispoFiles\2021-06-06");
-            if (IsWadesLocal)
-            {
-                //WebDriver = new WebDriver(@"C:\Users\wadeb\Downloads\chromedriver_win32", RootDirectory);
-            }
+            WebDriver = new WebDriver(@"C:\Users\kylen\source\repos\wadegb12\newDispoIdentifier\ChomeDriver");
 
-            var yesterday = DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd");
-            var directoryYesterday = RootDirectory + yesterday + @"\";
-            YesterdaysDisposFile = directoryYesterday + yesterday + " Licensed Dispos.txt";
+            YesterdaysDisposFile = Globals.GetYesterdayFolder() + DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd") + " Licensed Dispos.txt";
 
-            var dateToday = Convert.ToDateTime(DateTime.Now).ToString("yyyy-MM-dd");
-            var directoryToday = RootDirectory + dateToday + @"\";
-            TodaysOMMAListFile = directoryToday + dateToday + " omma_dispensaries_list.pdf";
-            TodaysDisposFile = directoryToday + dateToday + " Licensed Dispos.txt";
-            TodaysNewDisposFile = directoryToday + dateToday + " New Dispos.txt";
+            TodaysOMMAListFile = Globals.GetDailyFolder() + Globals.GetDailyDownloadFile();
+            TodaysDisposFile = Globals.GetDailyFolder() + DateTime.Now.ToString("yyyy-MM-dd") + " Licensed Dispos.txt";
+            TodaysNewDisposFile = Globals.GetDailyFolder() + DateTime.Now.ToString("yyyy-MM-dd") + " New Dispos.txt";
         }
 
         public void Run()
         {
             try
             {
-                //Services.DispensaryDownloader.DownloadNewDispensaries(webDriver);
-                //Globals.PrefixDateToLatestFile(webDriver);
+                DispensaryDownloader.DownloadNewDispensaries(WebDriver);
+                Globals.PrefixDateToLatestFile(WebDriver);
 
                 var outputService = new OutputService(Logger);
                 var dispoListReader = new DispensaryListReader(TodaysOMMAListFile, Logger);
