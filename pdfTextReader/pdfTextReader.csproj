@@ -61,7 +61,6 @@
   <ItemGroup>
     <Compile Include="DispensaryIdentifier.cs" />
     <Compile Include="Common\Globals.cs" />
-    <Compile Include="Common\WebDriver.cs" />
     <Compile Include="Page.cs" />
     <Compile Include="Dispensary.cs" />
     <Compile Include="Program.cs" />
