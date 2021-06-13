@@ -21,10 +21,7 @@ namespace pdfTextReader.Common
         // KNB : Check that all folder paths needed for the application exists and if not create them.
         public static void SyncApplication()
         {
-            // KNB : 06/12/21 : Get index of source code and go one directory up to set base directory
-            // KNB : 06/12/21 : WILL THIS WORK ONCE IN PRODUCTION????
-            int index = AppDomain.CurrentDomain.BaseDirectory.ToLower().IndexOf("source");          
-            baseDirectory = AppDomain.CurrentDomain.BaseDirectory.ToLower().Remove(index) + "NewDispoInfo\\";
+            string baseDirectory = "C:\\NewDispoInfo\\";
 
             // Check if base Directory exists if not create it
             if (!Directory.Exists(baseDirectory))
